@@ -1,3 +1,47 @@
+commit e2bf5b255611de267bc1c56b2fccf51268d28f3d
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Tue Jan 8 11:04:38 2013 +0100
+
+    cirrus: release 1.5.2
+
+commit bade70ce71ea26fae4f250f0bd1729dfb0d392df
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Tue Jan 8 11:00:33 2013 +0100
+
+    cirrus: fix out of bounds access to shadowfb
+    
+    Perform the same bounds checking other drivers do. Thanks to Dave Gilbert for feedback on this patch.
+    
+    Signed-off-by: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+
+commit 5fcb3b018797457c3099a86c6c1257b6e4e89ceb
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Sep 25 08:54:36 2012 -0400
+
+    Remove mibstore.h
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+commit aa9016576163b3065910437b6ea51a69f24a41ca
+Author: Dave Airlie <airlied@gmail.com>
+Date:   Tue Aug 21 21:01:43 2012 +1000
+
+    cirrus: fix build against old server
+    
+    Reported-by: jobermayer on irc
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+
+commit bc04e9ed659be51a3c712f34a038bd60f639f9c5
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Mon Aug 20 13:49:19 2012 +1000
+
+    cirrus: fix falling back after kernel check
+    
+    if we find a kernel driver the code leave the pci slot claimed which
+    stops us falling back. unclaim the pci slot.
+    
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+
 commit 129076c2a9c20ab515736bb7141b4f334699e21b
 Author: Dave Airlie <airlied@redhat.com>
 Date:   Tue Jul 17 16:05:09 2012 +1000

@@ -4,8 +4,8 @@
 
 Summary:   Xorg X11 cirrus video driver
 Name:      xorg-x11-drv-cirrus
-Version:   1.5.1
-Release:   2%{?dist}
+Version:   1.5.2
+Release:   1%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/cirrus.4*
 
 %changelog
+* Wed Oct 23 2013 Soren Sandmann <ssp@redhat.com> - 1.5.2-1
+- rebase to 1.5.2 to fix #966191
+
 * Wed Aug 22 2012 airlied@redhat.com - 1.5.1-2
 - rebuild for server ABI requires
 
