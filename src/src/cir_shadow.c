@@ -1,5 +1,3 @@
-/* $XFree86: Exp $ */
-
 /*
    Copyright (c) 1999,2000  The XFree86 Project Inc. 
    based on code written by Mark Vojkovich <markv@valinux.com>
@@ -11,7 +9,6 @@
 
 #include "xf86.h"
 #include "xf86_OSproc.h"
-#include "xf86PciInfo.h"
 #include "xf86Pci.h"
 #include "shadowfb.h"
 #include "servermd.h"
@@ -46,9 +43,9 @@ cirRefreshArea(ScrnInfoPtr pScrn, int num, BoxPtr pbox)
 } 
 
 _X_EXPORT void
-cirPointerMoved(int index, int x, int y)
+cirPointerMoved(SCRN_ARG_TYPE arg, int x, int y)
 {
-    ScrnInfoPtr pScrn = xf86Screens[index];
+    SCRN_INFO_PTR(arg);
     CirPtr pCir = CIRPTR(pScrn);
     int newX, newY;
 
@@ -60,7 +57,7 @@ cirPointerMoved(int index, int x, int y)
 	newY = pScrn->pScreen->width - x - 1;
     }
 
-    (*pCir->PointerMoved)(index, newX, newY);
+    (*pCir->PointerMoved)(arg, newX, newY);
 }
 
 _X_EXPORT void
