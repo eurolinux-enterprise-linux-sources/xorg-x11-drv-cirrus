@@ -5,25 +5,23 @@
 Summary:   Xorg X11 cirrus video driver
 Name:      xorg-x11-drv-cirrus
 Version:   1.5.2
-Release:   1%{?dist}
+Release:   2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 ExcludeArch: s390 s390x
 
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Source1:   cirrus.xinf
 
 Patch0:	    cirrus-1.2.0-qemu.patch
+Patch3:	    cirrus-1.3.2-virt-16bpp.patch
 
-BuildRequires: xorg-x11-server-sdk >= 1.5.99.902
+BuildRequires: xorg-x11-server-sdk >= 1.10.99.902
 BuildRequires: xorg-x11-util-macros >= 1.1.5
 
-Requires:  hwdata
-Requires:  Xorg %(xserver-sdk-abi-requires ansic)
-Requires:  Xorg %(xserver-sdk-abi-requires videodrv)
+Requires: Xorg %(xserver-sdk-abi-requires ansic)
+Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 cirrus video driver.
@@ -31,6 +29,7 @@ X.Org X11 cirrus video driver.
 %prep
 %setup -q -n %{tarball}-%{version}
 %patch0 -p1 -b .qemu
+%patch3 -p1 -b .16bpp
 
 %build
 %configure --disable-static
@@ -40,9 +39,6 @@ make -s %{_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
-
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/hwdata/videoaliases
-install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/hwdata/videoaliases/
 
 # FIXME: Remove all libtool archives (*.la) from modules directory.  This
 # should be fixed in upstream Makefile.am or whatever.
@@ -56,24 +52,90 @@ rm -rf $RPM_BUILD_ROOT
 %{driverdir}/cirrus_drv.so
 %{driverdir}/cirrus_alpine.so
 %{driverdir}/cirrus_laguna.so
-%{_datadir}/hwdata/videoaliases/cirrus.xinf
 %{_mandir}/man4/cirrus.4*
 
 %changelog
-* Wed Oct 23 2013 Soren Sandmann <ssp@redhat.com> - 1.5.2-1
-- rebase to 1.5.2 to fix #966191
+* Mon Apr 28 2014 Adam Jackson <ajax@redhat.com> - 1.5.2-2
+- Fix rhel arch list
 
-* Wed Aug 22 2012 airlied@redhat.com - 1.5.1-2
-- rebuild for server ABI requires
+* Wed Apr 23 2014 Adam Jackson <ajax@redhat.com> 1.5.2-1
+- cirrus 1.5.2
 
-* Thu Aug 02 2012 Dave Airlie <airlied@redhat.com> 1.5.1-1
-- rebase to latest upstream release 1.5.1 for 6.4 server
+* Mon Aug 20 2012 Dave Airlie <airlied@redhat.com> 1.5.1-3
+- fix slot unclaim if cirrus loads before modeset
 
-* Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> - 1.3.2-2
-- rebuild for 6.2 server rebase
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 1.3.2-1.1
-- Rebuilt for RHEL 6
+* Wed Jul 18 2012 Dave Airlie <airlied@redhat.com> 1.5.1-1
+- latest upstream release
+
+* Fri May 25 2012 Dave Airlie <airlied@redhat.com> 1.4.0-2
+- don't load the cirrus driver if kms driver loaded.
+
+* Thu Apr 26 2012 Adam Jackson <ajax@redhat.com> 1.4.0-1
+- cirrus 1.4.0
+
+* Thu Apr 05 2012 Adam Jackson <ajax@redhat.com> - 1.3.2-20
+- RHEL arch exclude updates
+
+* Mon Apr 02 2012 Adam Jackson <ajax@redhat.com> 1.3.2-19
+- cirrus-1.3.2-virt-16bpp.patch: Default to 16bpp in virt
+
+* Sat Feb 11 2012 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-18
+- ABI rebuild
+
+* Fri Feb 10 2012 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-17
+- ABI rebuild
+
+* Tue Jan 24 2012 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-16
+- ABI rebuild
+
+* Wed Jan 04 2012 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-15
+- Rebuild for server 1.12
+
+* Fri Dec 16 2011 Adam Jackson <ajax@redhat.com> - 1.3.2-14
+- Drop xinf file
+
+* Tue Nov 29 2011 Adam Jackson <ajax@redhat.com> 1.3.2-13
+- cirrus-1.3.2-vgahw.patch: Adapt to new vgahw API
+
+* Mon Nov 14 2011 Adam Jackson <ajax@redhat.com> - 1.3.2-12
+- ABI rebuild
+
+* Wed Nov 09 2011 Adam Jackson <ajax@redhat.com> 1.3.2-11
+- ABI rebuild
+- cirrus-1.3.2-git.patch: Sync with git for new ABI
+
+* Thu Aug 18 2011 Adam Jackson <ajax@redhat.com> - 1.3.2-10
+- Rebuild for xserver 1.11 ABI
+
+* Wed May 11 2011 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-9
+- Rebuild for server 1.11
+
+* Tue Apr 19 2011 Adam Jackson <ajax@redhat.com> 1.3.2-8
+- cirrus-1.2.0-qemu.patch: Remove the 10x7 heuristic, since the server
+  has equivalent code now.  Instead, disable "acceleration" under qemu,
+  since taking the hypercall trap is really quite expensive and you're
+  better off doing noaccel.
+
+* Mon Feb 28 2011 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-7
+- Rebuild for server 1.10
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu Dec 02 2010 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-5
+- Rebuild for server 1.10
+
+* Wed Oct 27 2010 Adam Jackson <ajax@redhat.com> 1.3.2-4
+- Add ABI requires magic. (#542742)
+
+* Mon Jul 05 2010 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-3
+- rebuild for X Server 1.9
+
+* Thu Jan 21 2010 Peter Hutterer <peter.hutterer@redhat.com> - 1.3.2-2
+- Rebuild for server 1.8
 
 * Tue Aug 04 2009 Dave Airlie <airlied@redhat.com> 1.3.2-1
 - cirrus 1.3.2
